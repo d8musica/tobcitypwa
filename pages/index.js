@@ -8,31 +8,24 @@ import {
 
 
 function Home (props) {
-    console.log("TCL: Home -> props", props)
-    function Sum () {
-      props.dispatch({ type: 'INCREMENT' })      
-    }
+  function Sum () {
+    props.dispatch({ type: 'INCREMENT' })      
+  }
 
-    function Substraction () {      
-      props.dispatch({ type: 'DECREMENT' })   
-    }
+  function Substraction () {      
+    props.dispatch({ type: 'DECREMENT' })   
+  }
 
   return (
     <div>
       <Head title="Tobcity PWA" />
     
-
       <div className="hero">
         <Button type="primary" onClick={Sum} >Suma</Button>
         <Button type="primary" onClick={Substraction} >Resta</Button>
         HOME
-
         <Show />
-
-
-
       </div>
-
       <style jsx>{`
         .hero {
           text-align: center;
@@ -41,7 +34,5 @@ function Home (props) {
     </div>
   )
 }
-
-
 
 export default connect()(Home)
