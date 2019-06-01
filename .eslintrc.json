@@ -16,6 +16,10 @@
     "rules": {
       "react/prop-types": 0,
       "react/jsx-uses-vars": [2],
-      "no-console": 0
+      "no-console": 0,
+      "indent": [
+        "error",
+        2
+      ]
     }
   }
