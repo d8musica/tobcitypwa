@@ -1,24 +1,42 @@
-import { Fragment } from 'react'
-import { Layout } from 'antd'
-const { Content, Footer } = Layout;
-import SideMenu from '../components/SiderComponent'
-import Head from '../components/head'
+import React from 'react'
+import Login from '../components/Login'
+import Router from 'next/router'
+import Link from 'next/link'
+import { NextAuth } from 'next-auth/client'
 
 function Home (props) {
-  return (
-    <Fragment>
-      <Head title="Tobcity PWA" />
-      <Layout style={{ minHeight: '100vh' }}>
-        <SideMenu />
-        <Layout>
-          <Content style={{ margin: '16px' }}>
-            <div style={{ padding: 24, background: '#fff', minHeight: "100vh" }}>Bill is a cat.</div>
-          </Content>
-          <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
-        </Layout>
-      </Layout>
-    </Fragment>
-  )
+  function handleSignOutSubmit(event) {
+    event.preventDefault()
+    NextAuth.signout()
+      .then(() => {
+        Router.push('/auth/callback')
+      })
+      .catch(err => {
+        Router.push('/auth/error?action=signout')
+      })
+  }
+  if (props.session.user) {
+    return (
+      <React.Fragment>
+        <p><Link href="/auth"><a className="btn btn-secondary">Manage Account</a></Link></p>
+        <form id="signout" method="post" action="/auth/signout" onSubmit={handleSignOutSubmit}>
+          <input name="_csrf" type="hidden" value={props.session.csrfToken} />
+          <button type="submit" className="btn btn-outline-secondary">Sign out</button>
+        </form>
+      </React.Fragment>
+    )
+  } else {
+    return (
+      <Login />
+    )
+  }
 }
 
+Home.getInitialProps = async ({ req }) => {
+  return {
+    session: await NextAuth.init({ req }),
+    linkedAccounts: await NextAuth.linked({ req }),
+    providers: await NextAuth.providers({ req })
+  }
+}
 export default Home
