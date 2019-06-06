@@ -1,9 +1,18 @@
 /* eslint-disable */
-const withCss = require('@zeit/next-css')
+const withCSS = require('@zeit/next-css')
 const withOffline = require('next-offline')
+const withImages = require('next-images')
+const withLess = require('@zeit/next-less')
 // fix: prevents error when .css files are required by node
+if (typeof require !== 'undefined') {
+  require.extensions['.less'] = file => { }
+}
 if (typeof require !== 'undefined') {
   require.extensions['.css'] = file => {}
 }
 
-module.exports = withOffline(withCss())
+module.exports = withOffline(withLess(withImages(withCSS({
+  lessLoaderOptions: {
+    javascriptEnabled: true
+  }
+}))))

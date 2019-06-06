@@ -1,38 +1,42 @@
-import Head from '../components/head'
-import Show from '../components/Show'
-import { connect } from 'react-redux'
-
-import {
-  Button
-} from 'antd'
-
+import React from 'react'
+import Login from '../components/Login'
+import Router from 'next/router'
+import Link from 'next/link'
+import { NextAuth } from 'next-auth/client'
 
 function Home (props) {
-  function Sum () {
-    props.dispatch({ type: 'INCREMENT' })      
+  function handleSignOutSubmit(event) {
+    event.preventDefault()
+    NextAuth.signout()
+      .then(() => {
+        Router.push('/auth/callback')
+      })
+      .catch(err => {
+        Router.push('/auth/error?action=signout')
+      })
   }
-
-  function Substraction () {      
-    props.dispatch({ type: 'DECREMENT' })   
+  if (props.session.user) {
+    return (
+      <React.Fragment>
+        <p><Link href="/auth"><a className="btn btn-secondary">Manage Account</a></Link></p>
+        <form id="signout" method="post" action="/auth/signout" onSubmit={handleSignOutSubmit}>
+          <input name="_csrf" type="hidden" value={props.session.csrfToken} />
+          <button type="submit" className="btn btn-outline-secondary">Sign out</button>
+        </form>
+      </React.Fragment>
+    )
+  } else {
+    return (
+      <Login />
+    )
   }
-
-  return (
-    <div>
-      <Head title="Tobcity PWA" />
-    
-      <div className="hero">
-        <Button type="primary" onClick={Sum} >Suma</Button>
-        <Button type="primary" onClick={Substraction} >Resta</Button>
-        HOME
-        <Show />
-      </div>
-      <style jsx>{`
-        .hero {
-          text-align: center;
-        }
-      `}</style>
-    </div>
-  )
 }
 
-export default connect()(Home)
+Home.getInitialProps = async ({ req }) => {
+  return {
+    session: await NextAuth.init({ req }),
+    linkedAccounts: await NextAuth.linked({ req }),
+    providers: await NextAuth.providers({ req })
+  }
+}
+export default Home
