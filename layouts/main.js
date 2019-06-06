@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Layout, Button } from 'antd'
+import { Layout } from 'antd'
 const { Content, Footer } = Layout;
 import SideMenu from '../components/SiderComponent'
 import Head from '../components/head'
@@ -12,7 +12,7 @@ export default ({ children }) => (
       <Layout>
         <Content style={{ margin: '16px' }}>
           <div style={{ padding: 24, background: '#fff', minHeight: "100vh" }}>{children}</div>
-          <Button type="primary" >HOLA!</Button>
+          
         </Content>
         <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
       </Layout>
