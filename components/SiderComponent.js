@@ -4,10 +4,31 @@ const { Sider } = Layout
 import Logo from '../static/icon.png'
 import Link from 'next/link'
 
-export default function SiderComponent() {
+export default function SiderComponent(props) {
+  console.log('props Sider: ', props);
   const [collapsed, setCollapsed] = useState(true)
   function onCollapse() {
     setCollapsed(!collapsed)
+  }
+  function handleSignOutSubmit(event) {
+    event.preventDefault()
+    NextAuth.signout()
+      .then(() => {
+        Router.push('/auth/callback')
+      })
+      .catch(err => {
+        Router.push('/auth/error?action=signout')
+      })
+  }
+  function handleSignOutSubmit(event) {
+    event.preventDefault()
+    NextAuth.signout()
+      .then(() => {
+        Router.push('/auth/callback')
+      })
+      .catch(err => {
+        Router.push('/auth/error?action=signout')
+      })
   }
   return (
     <Fragment>
@@ -30,6 +51,25 @@ export default function SiderComponent() {
               <a></a>
             </Link>
           </Menu.Item>
+          {
+            props.session.user
+              ? (
+                <Menu.Item key="4">
+                  <Icon type="logout" />
+                  <span>Salir</span>
+                  <Link href='/hello'>
+                    <div>
+                      <a onClick={() => { handleSignOutSubmit()}}>
+                      </a>
+                    </div>
+                  </Link>
+                  <form id="signout" method="post" action="/auth/signout" onSubmit={handleSignOutSubmit}>
+                    <input name="_csrf" type="hidden" value={props.session.csrfToken} />
+                    <button type="submit" className="btn btn-outline-secondary">Sign out</button>
+                  </form>
+                </Menu.Item>
+              ) : null
+          }
         </Menu>
         <style scoped>{`
         .logo-small {
@@ -52,3 +92,5 @@ export default function SiderComponent() {
     </Fragment>
   )
 }
+
+

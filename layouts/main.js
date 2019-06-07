@@ -4,17 +4,16 @@ const { Content, Footer } = Layout;
 import SideMenu from '../components/SiderComponent'
 import Head from '../components/head'
 
-export default ({ children }) => (
+export default ({ children, session }) => (
   <Fragment>
     <Head title="Tobcity PWA" />
     <Layout style={{ minHeight: '100vh' }}>
-      <SideMenu />
+      <SideMenu session={session} />
       <Layout>
         <Content style={{ margin: '16px' }}>
           <div style={{ padding: 24, background: '#fff', minHeight: "100vh" }}>{children}</div>
-          
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+        <Footer style={{ textAlign: 'center' }}>ANDRES Y DANIE8 2019</Footer>
       </Layout>
     </Layout>
   </Fragment>

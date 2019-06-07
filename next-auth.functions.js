@@ -81,15 +81,20 @@ module.exports = () => {
         //
         // You can use this to capture profile.avatar, profile.location, etc.
         insert: (user, oAuthProfile) => {
+          // console.log('user: ', user);
+          // console.log('oAuthProfile: ', oAuthProfile);
+          const avatarData = oAuthProfile._json.picture.data
+          const newUser = { ...user, avatarData}
+          console.log('newUser: ', newUser);
           return new Promise((resolve, reject) => {
-            usersCollection.insert(user, (err, response) => {
+            usersCollection.insertOne(newUser, (err, response) => {
               if (err) return reject(err)
 
               // Mongo Client automatically adds an id to an inserted object, but 
               // if using a work-a-like we may need to add it from the response.
-              if (!user._id && response._id) user._id = response._id
+              if (!newUser._id && response._id) newUser._id = response._id
 
-              return resolve(user)
+              return resolve(newUser)
             })
           })
         },
@@ -122,6 +127,7 @@ module.exports = () => {
         },
         // Seralize turns the value of the ID key from a User object
         serialize: (user) => {
+          // console.log('user serialize: ', user);
           // Supports serialization from Mongo Object *and* deserialize() object
           if (user.id) {
             // Handle responses from deserialize()
@@ -145,6 +151,7 @@ module.exports = () => {
               if (!user) return resolve(null)
                 
               return resolve({
+                avatarData: user.avatarData,
                 id: user._id,
                 name: user.name,
                 email: user.email,
@@ -167,9 +174,9 @@ module.exports = () => {
             .sendMail({
               to: email,
               from: process.env.EMAIL_FROM,
-              subject: 'Sign in link',
-              text: `Use the link below to sign in:\n\n${url}\n\n`,
-              html: `<p>Use the link below to sign in:</p><p>${url}</p>`
+              subject: 'Link de ingreso a TOBCITY',
+              text: `>Dale click al enlace y comienza a disfrutar de TOBCITY\n\n${url}\n\n`,
+              html: `<p>Dale click al enlace y comienza a disfrutar de TOBCITY</p>Por favor ingresa a:</p><p>${url}</p>`
             }, (err) => {
               if (err) {
                 console.error('Error sending email to ' + email, err)

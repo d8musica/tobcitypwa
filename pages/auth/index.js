@@ -31,7 +31,6 @@ class SigninForm extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form
-    console.log(this.props.session.user);
     if (this.props.session.user) {
       return (
         <div className="container">

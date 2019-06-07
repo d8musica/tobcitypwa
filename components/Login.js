@@ -72,7 +72,6 @@ function Login() {
       
       <style scoped>
         {`
-
           .relative
           {
             position: relative;
@@ -90,11 +89,10 @@ function Login() {
             width: 75%;
             height: 1%;
             text-align:center;
+            cursor: pointer;
           }
-          
           .icon {
             width: 20%;
-
           }
           .centered {
             text-align: center;
