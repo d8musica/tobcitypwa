@@ -1,13 +1,13 @@
 import { Fragment } from 'react'
 import Login from '../components/Login'
-import Router from 'next/router'
 import Link from 'next/link'
 import { NextAuth } from 'next-auth/client'
-import { Button, Card, Icon, Avatar } from 'antd'
+import { Card, Icon, Avatar, Row, Col } from 'antd'
 import ProfileCover from '../static/profileCover.png'
+import SearchCover from '../static/searchCover.png'
 const { Meta } = Card
 
-function Profile ({ name }) {
+function Profile ({ name, avatar }) {
   return (
     <Card
       hoverable
@@ -21,9 +21,9 @@ function Profile ({ name }) {
       actions={[<Link href="/auth"><a>VE A TU PERFIL</a></Link>]}
     >
       <Meta
-        avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+        avatar={<Avatar size="large" src={avatar} />}
         title={`Hola ${name}`}
-        description="Aqui encuentras toda tu informacion"
+        description="Dale click y administra tu informacion en TOBCITY"
       />
     </Card>
   )
@@ -37,15 +37,14 @@ function BuscarViaje () {
       cover={
         <img
           alt="example"
-          src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+          src={SearchCover}
         />
       }
-      actions={[<Icon type="setting" />, <Icon type="edit" />, <Icon type="ellipsis" />]}
+      actions={[<Link href="/"><a>ENCUENTRA AQUI TU VIAJE</a></Link>]}
     >
       <Meta
-        avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-        title="Card title"
-        description="This is the description"
+        title="Buscar Viajes"
+        description="Aqui encuentras viajes locales, nacionales y convenios"
       />
     </Card>
   )
@@ -74,27 +73,14 @@ function AgregarViaje () {
 }
 
 function Home (props) {
-  const { name } = props.session.user || ''
-  function handleSignOutSubmit(event) {
-    event.preventDefault()
-    NextAuth.signout()
-      .then(() => {
-        Router.push('/auth/callback')
-      })
-      .catch(err => {
-        Router.push('/auth/error?action=signout')
-      })
-  }
+  console.log('props: ', props);
+  const { name, avatarData } = props.session.user || ''
   if (props.session.user) {
     return (
-      <div className='main-container'>
-        <form id="signout" method="post" action="/auth/signout" onSubmit={handleSignOutSubmit}>
-          <input name="_csrf" type="hidden" value={props.session.csrfToken} />
-          <button type="submit" className="btn btn-outline-secondary">Sign out</button>
-        </form>
-        <div><Profile name={name} /></div>
-        <div><BuscarViaje /></div>
-        <div><AgregarViaje /></div>
+      <Row className='main-container'>
+        <Col span={8} ><Profile name={name} avatar={avatarData.url}/></Col>
+        <Col span={8} ><BuscarViaje /></Col>
+        <Col span={8} ><AgregarViaje /></Col>
         <style scoped>{`
           .main-container {
             display: flex;
@@ -103,7 +89,7 @@ function Home (props) {
             top: 200px;
           }
         `}</style>
-      </div>
+      </Row>
     )
   } else {
     return (

@@ -25,7 +25,7 @@ class MyApp extends App {
               }}
               loadingClassNames='loading-indicator'
             >
-              <Component {...pageProps} />
+              <Component {...pageProps} key={Component}/>
             </PageTransition>
           </Layout>
         </Provider>
