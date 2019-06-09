@@ -2,7 +2,7 @@ import TermsText from './TermsText';
 import Fondo from '../static/fondo.png';
 import Logo from '../static/logo.png';
 
-function Terms() {
+function Terms(props) {
   return (
     <div className="policontainer">
       <div className="logocontainer">

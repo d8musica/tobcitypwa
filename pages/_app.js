@@ -13,7 +13,7 @@ class MyApp extends App {
     return (
       <Container>
         <Provider store={reduxStore}>
-          <Layout>
+          <Layout {...pageProps}>
             <PageTransition
               timeout={TIMEOUT}
               classNames='page-transition'
@@ -25,7 +25,7 @@ class MyApp extends App {
               }}
               loadingClassNames='loading-indicator'
             >
-              <Component {...pageProps} />
+              <Component {...pageProps} key={Component}/>
             </PageTransition>
           </Layout>
         </Provider>

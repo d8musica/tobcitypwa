@@ -1,9 +1,59 @@
 import React, { Component, Fragment } from 'react'
 import Router from 'next/router'
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Form, Icon, Input, Button, Descriptions, Row, Col, Avatar } from 'antd';
 import Link from 'next/link'
 import { NextAuth } from 'next-auth/client'
+import ProfileBG from '../../static/profile/profilebg.png'
+import AvatarCircle from '../../static/profile/profileCircle.png'
 
+function Profile(props) {
+  console.log('props: ', props);
+  const { user: {name, email, avatarData}, session, linkedAccounts } = props
+  return (
+    <Row>
+      <img className="background-profile" src={ProfileBG} alt="TOBCITY background home" />
+      <div className="avatar-profile">
+        <img alt="avatar circle" src={AvatarCircle} className="avatar-circle" />
+        <img alt="your picture" src={avatarData.url} className="avatar-pic"/>
+      </div>
+      <Descriptions title="Informacion de tu cuenta" bordered size="small">
+        <Descriptions.Item label="Tu Nombre">{name}</Descriptions.Item>
+        <Descriptions.Item label="E-mail">{email}</Descriptions.Item>
+      </Descriptions>
+      <LinkAccounts
+        session={session}
+        linkedAccounts={linkedAccounts}
+      />
+      <style scoped>{`
+        .avatar-circle {
+          position: absolute
+        }
+        .avatar-profile {
+         text-align: center; 
+        }
+        .avatar-pic {
+          width: 200px;
+          position: relative;
+          top: 30px;
+          left: 30px;
+          border-radius: 50%;
+        }
+        .background-profile {
+          width: 100%;
+          height: 100vh;
+          position: absolute;
+          z-index: 0;
+        }
+        .ant-descriptions {
+          color: white;
+          position: relative;
+          top: 30px;
+          padding: 20px;
+        }
+      `}</style>
+    </Row>
+  )
+}
 class SigninForm extends Component {
   static async getInitialProps({ req }) {
     return {
@@ -31,26 +81,11 @@ class SigninForm extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form
-    console.log(this.props.session.user);
-    if (this.props.session.user) {
+    const { session, linkedAccounts } = this.props
+    const { user } = this.props.session
+    if (user) {
       return (
-        <div className="container">
-          <div className="text-center">
-            <h1 className="display-4 mt-3">NextAuth Example</h1>
-            <p className="lead mt-3 mb-1">You are signed in as <span className="font-weight-bold">{this.props.session.user.email}</span>.</p>
-          </div>
-          <div className="row">
-            <div className="col-sm-5 mr-auto ml-auto">
-              <LinkAccounts
-                session={this.props.session}
-                linkedAccounts={this.props.linkedAccounts}
-              />
-            </div>
-          </div>
-          <p className="text-center">
-            <Link href="/"><a>Home</a></Link>
-          </p>
-        </div>
+        <Profile user={user} session={session} linkedAccounts={linkedAccounts} />
       )
     } else {
         return (
@@ -88,40 +123,51 @@ class SigninForm extends Component {
 export class LinkAccounts extends React.Component {
   render() {
     return (
-      <div className="card mt-3 mb-3">
-        <h4 className="card-header">Link Accounts</h4>
-        <div className="card-body pb-0">
-          {
-            Object.keys(this.props.linkedAccounts).map((provider, i) => {
-              return <LinkAccount key={i} provider={provider} session={this.props.session} linked={this.props.linkedAccounts[provider]} />
-            })
-          }
-        </div>
-      </div>
+      <>
+        <h2>Estas son tus cuentas asociadas a TOBCITY:</h2>
+        {
+          Object.keys(this.props.linkedAccounts).map((provider, i) => {
+            return <LinkAccount key={i} provider={provider} session={this.props.session} linked={this.props.linkedAccounts[provider]} />
+          })
+        }
+      </>
     )
   }
 }
-
 export class LinkAccount extends React.Component {
   render() {
     if (this.props.linked === true) {
       return (
         <form method="post" action={`/auth/oauth/${this.props.provider.toLowerCase()}/unlink`}>
           <input name="_csrf" type="hidden" value={this.props.session.csrfToken} />
-          <p>
-            <button className="btn btn-block btn-outline-danger" type="submit">
-              Unlink from {this.props.provider}
-            </button>
-          </p>
+          <Button type="danger" htmlType="submit">
+            Desasociar TOBCITY de {this.props.provider}
+          </Button>
+          <style scoped>{`
+          .ant-btn-primary {
+            background: rgba(0, 191, 181, .4);
+            position: relative;
+            left: 20px;
+            margin: 5px;
+          }
+          .ant-btn-danger {
+            background: rgba(255, 200, 58, .4);
+            position: relative;
+            left: 20px;
+            margin: 5px;
+          }
+          .ant-btn-primary:active,
+          .ant-btn-primary:hover {
+            background: rgb(0, 191, 181);
+          }
+        `}</style>
         </form>
       )
     } else {
       return (
-        <p>
-          <a className="btn btn-block btn-outline-primary" href={`/auth/oauth/${this.props.provider.toLowerCase()}`}>
-            Link with {this.props.provider}
-          </a>
-        </p>
+        <Button type="primary" href={`/auth/oauth/${this.props.provider.toLowerCase()}`}>
+          Asociar TOBCITY con {this.props.provider}
+        </Button>
       )
     }
   }

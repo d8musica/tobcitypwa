@@ -3,11 +3,25 @@ import { Layout, Menu, Icon } from 'antd'
 const { Sider } = Layout
 import Logo from '../static/icon.png'
 import Link from 'next/link'
+import Router from 'next/router'
+import { NextAuth } from 'next-auth/client'
 
-export default function SiderComponent() {
+
+export default function SiderComponent(props) {
+  // console.log('props Sider: ', props);
   const [collapsed, setCollapsed] = useState(true)
   function onCollapse() {
     setCollapsed(!collapsed)
+  }
+  function handleSignOutSubmit(event) {
+    event.preventDefault()
+    NextAuth.signout()
+      .then(() => {
+        Router.push('/auth/callback')
+      })
+      .catch(err => {
+        Router.push('/auth/error?action=signout')
+      })
   }
   return (
     <Fragment>
@@ -30,6 +44,29 @@ export default function SiderComponent() {
               <a></a>
             </Link>
           </Menu.Item>
+          {
+            props.session &&(props.session.user && 
+              <Menu.Item key="3">
+                <Icon type="profile" />
+                <span>Tu perfil</span>
+                <Link href="/auth">
+                  <a></a>
+                </Link>
+              </Menu.Item>
+            )
+          }
+          {
+            props.session && (props.session.user
+              && (
+                <Menu.Item key="4">
+                  <Icon type="logout" />
+                  <span>Salir</span>
+                  <Link href="/">
+                    <a onClick={handleSignOutSubmit}></a>
+                  </Link>
+                </Menu.Item>
+              ))
+          }
         </Menu>
         <style scoped>{`
         .logo-small {
@@ -52,3 +89,5 @@ export default function SiderComponent() {
     </Fragment>
   )
 }
+
+

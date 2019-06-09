@@ -13,14 +13,15 @@ module.exports = () => {
       strategyOptions: {
         clientID: process.env.FACEBOOK_ID,
         clientSecret: process.env.FACEBOOK_SECRET,
-        profileFields: ['id', 'displayName', 'email', 'link']
+        profileFields: ['id', 'displayName', 'email', 'link', 'picture.type(large)']
       },
       getProfile(profile) {
         // Normalize profile into one with {id, name, email} keys
         return {
           id: profile.id,
           name: profile.displayName,
-          email: profile._json.email
+          email: profile._json.email,
+          avatar: profile._json.picture.data
         }
       }
     })
@@ -42,7 +43,8 @@ module.exports = () => {
         return {
           id: profile.id,
           name: profile.displayName,
-          email: profile.emails[0].value
+          email: profile.emails[0].value,
+          avatarData: profile._json.picture
         }
       }
     })
