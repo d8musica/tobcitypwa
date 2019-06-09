@@ -45,16 +45,27 @@ export default function SiderComponent(props) {
             </Link>
           </Menu.Item>
           {
-            props.session && (props.session.user
-            && (
-              <Menu.Item key="4">
-                <Icon type="logout" />
-                <span>Salir</span>
-                <Link href="/">
-                  <a onClick={handleSignOutSubmit}></a>
+            props.session &&(props.session.user && 
+              <Menu.Item key="3">
+                <Icon type="profile" />
+                <span>Tu perfil</span>
+                <Link href="/auth">
+                  <a></a>
                 </Link>
               </Menu.Item>
-            ))
+            )
+          }
+          {
+            props.session && (props.session.user
+              && (
+                <Menu.Item key="4">
+                  <Icon type="logout" />
+                  <span>Salir</span>
+                  <Link href="/">
+                    <a onClick={handleSignOutSubmit}></a>
+                  </Link>
+                </Menu.Item>
+              ))
           }
         </Menu>
         <style scoped>{`

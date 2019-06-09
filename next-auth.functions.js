@@ -82,8 +82,13 @@ module.exports = () => {
         // You can use this to capture profile.avatar, profile.location, etc.
         insert: (user, oAuthProfile) => {
           // console.log('user: ', user);
-          // console.log('oAuthProfile: ', oAuthProfile);
-          const avatarData = oAuthProfile._json.picture.data
+          console.log('oAuthProfile: ', oAuthProfile)
+          let avatarData
+          if (oAuthProfile.provider === 'google') {
+            avatarData = { url: oAuthProfile._json.picture } 
+          } else {
+            avatarData = oAuthProfile._json.picture.data
+          }
           const newUser = { ...user, avatarData}
           console.log('newUser: ', newUser);
           return new Promise((resolve, reject) => {

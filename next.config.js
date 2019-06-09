@@ -14,5 +14,8 @@ if (typeof require !== 'undefined') {
 module.exports = withOffline(withLess(withImages(withCSS({
   lessLoaderOptions: {
     javascriptEnabled: true
+  },
+  publicRuntimeConfig: {
+    GOOGLE_MAPS: process.env.GOOGLE_MAPS
   }
 }))))

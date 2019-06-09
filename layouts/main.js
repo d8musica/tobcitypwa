@@ -11,10 +11,15 @@ export default ({ children, session }) => (
       <SideMenu session={session} />
       <Layout>
         <Content style={{ margin: '16px' }}>
-          <div style={{ padding: 24, background: '#fff', minHeight: "100vh" }}>{children}</div>
+          <div style={{ padding: 24, minHeight: "100vh" }}>{children}</div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>ANDRES Y DANIE8 2019</Footer>
       </Layout>
     </Layout>
+    <style scoped>{`
+      .ant-layout-content {
+        overflow: hidden;
+      }
+    `}</style>
   </Fragment>
 )
