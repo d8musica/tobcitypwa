@@ -1,16 +1,20 @@
+import { useState } from 'react'
 import Map from '../components/Map/MapContainer'
+import SecondPartForm from '../components//Map/SecondPartForm'
 import Clouds from '../static/addTravel/nubes.png'
 import City from '../static/addTravel/ciudad.png'
-
 function AddTravel() {
+  const [showMap, setShowMap] = useState(true)
   function handlerMap() {
-    console.log('HI')
+    setShowMap(!showMap)
   }
   return (
-    <div style={{ textAlign: "center", position: "relative", height: "100vh", width: "100%"}}>
+    <div style={{ textAlign: "center", position: "relative", height: "100vh", width: "100%", overflowY: "auto"}}>
       <img className="nubes" src={Clouds} alt="TOBCITY background agregar viaje" />
       <img className="city" src={City} alt="TOBCITY background agregar viaje" />
-      <Map handler={handlerMap} />
+      {
+        !showMap ? <Map handler={handlerMap} /> : <SecondPartForm />
+      }
       <style scoped>{`
         .add-travel-form-container {
           width: 400px;

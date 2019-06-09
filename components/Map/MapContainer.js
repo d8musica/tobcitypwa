@@ -3,8 +3,7 @@ import Modal from 'react-responsive-modal'
 import moment from 'moment'
 import { Map, Polyline, Marker, GoogleApiWrapper } from 'google-maps-react'
 import { connect } from 'react-redux'
-import styles from './Autocomplete.css'
-// import { addPlacesRequest } from '../../modules/Travel/TravelActions'
+import { addPlacesRequest } from '../../redux/actions/travelAction'
 import Mascotas from './images/mascota.png'
 import NoMascotas from './images/nomascota.png'
 import Equipaje from './images/equipaje.png'
@@ -36,15 +35,15 @@ class Contents extends Component {
     cigarChecked: false,
     foodChecked: false,
   };
-
+  
   componentDidMount() {
     this.renderAutoComplete();
   }
-
+  
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps.map) this.renderAutoComplete();
   }
-
+  
   onSubmit(e) {
     e.preventDefault();
   }
@@ -104,27 +103,28 @@ class Contents extends Component {
       smoke: cigarChecked,
       food: foodChecked,
     };
-    this.props.handler();
-    // this.props.dispatch(addPlacesRequest(places));
+    this.props.handler()
+    this.props.dispatch(addPlacesRequest(places))
+    console.log(this.props);
   }
   renderAutoComplete() {
     const { google, map } = this.props;
     const options = {
       componentRestrictions: { country: 'co' },
     };
-
+    
     if (!google || !map) return;
-
+    
     const autocompleteFrom = new google.maps.places.Autocomplete(this.autocompleteFrom, options);
     const autocompleteTo = new google.maps.places.Autocomplete(this.autocompleteTo, options);
     autocompleteFrom.bindTo('from', map);
     autocompleteTo.bindTo('to', map);
-
+    
     autocompleteFrom.addListener('place_changed', () => {
       const from = autocompleteFrom.getPlace();
-
+      
       if (!from.geometry) return;
-
+      
       if (from.geometry.viewport) map.fitBounds(from.geometry.viewport);
       else {
         map.setCenter(from.geometry.location);
@@ -137,14 +137,14 @@ class Contents extends Component {
     });
     autocompleteTo.addListener('place_changed', () => {
       const to = autocompleteTo.getPlace();
-
+      
       if (!to.geometry) return;
-
+      
       if (to.geometry.viewport) map.fitBounds(to.geometry.viewport);
       else {
         map.setZoom(17);
       }
-
+      
       this.setState({
         to: to.geometry.location,
         nameTo: to.name,
@@ -353,6 +353,7 @@ class Contents extends Component {
            }          
            .input-container input {
              margin: 10px;
+             width: 70%;
            }          
           
           .options {
