@@ -89,7 +89,7 @@ function AgregarViaje (props) {
       <Meta
         avatar={<Avatar src={AddAvatar} />}
         title="Agregar Viaje"
-        description="Programa, encuentra y sugiere destinos para compartir"
+        description="Programa, encuentra y sugiere destinos para compartir en Tobcity"
       />
     </Card>
   )
@@ -193,23 +193,12 @@ function Home (props) {
               background: rgb(42,168,154);
               border-radius: 50%;
             }
-            .ant-btn-primary {
-              background: rgb(42,168,154);
-              border: none;
-              color: white;
-            }
             .options-container-home {
               top: 10px;
               position: relative
             }
             .background-home {
               position: absolute;
-            }
-            .ant-btn-primary:focus,
-            .ant-btn-primary:active,
-            .ant-btn-primary:hover {
-              background-color: rgba(255, 200, 58, 1);
-              color: rgb(42,168,154);
             }
             @media (min-width: 992px) {
               .options-container-home {

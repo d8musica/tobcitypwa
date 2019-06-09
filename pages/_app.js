@@ -30,6 +30,17 @@ class MyApp extends App {
           </Layout>
         </Provider>
         <style jsx global>{`
+          .ant-btn-primary {
+            background: rgb(42,168,154);
+            border: none;
+            color: white;
+          }
+          .ant-btn-primary:focus,
+          .ant-btn-primary:active,
+          .ant-btn-primary:hover {
+            background-color: rgba(255, 200, 58, 1);
+            color: rgb(42,168,154);
+          }
           .page-transition-enter {
             opacity: 0;
             transform: translate3d(0, 20px, 0);

@@ -14,7 +14,9 @@ import NoCigarro from './images/nocigarro.png'
 import Comida from './images/comida.png'
 import NoComida from './images/nocomida.png'
 import getConfig from 'next/config'
-import { Input } from 'antd'
+import Title from './images/titleAddTravel.png'
+
+import { Button } from 'antd'
 const { publicRuntimeConfig } = getConfig()
 const { GOOGLE_MAPS } = publicRuntimeConfig
 
@@ -222,65 +224,62 @@ class Contents extends Component {
     const duration = DurationText && DurationText.match(/\d/g);
     let valueNational;
     let valueLocal;
-    // console.log('Distance', distance)
-    // console.log('Duration', duration)
+    // 
+    // 
     if (duration.length > 0 && duration.length <= 2) {
       const totalminutes = duration.join('');
       const totaldistance = distance.join('') / 10;
       const valueLoc = (5000 + (1100 * totaldistance) + (107 * totalminutes)) / 4;
       valueLocal = valueLoc.toFixed().replace(/\d(?=(\d{3})+\.)/g, '$&,');
-      // console.log('Valor Local', valueLocal)
+      // 
     }
     if (duration.length > 2) {
       const valueNal = (400 * distance.join('')) / 4;
       valueNational = valueNal.toFixed().replace(/\d(?=(\d{3})+\.)/g, '$&,');
-      // console.log('Valor Nacional', valueNational)
+      // 
     }
     const overviewPolyline = this.state.routes && this.state.routes.overview_polyline;
     const pointsline = overviewPolyline && this.props.google.maps.geometry.encoding.decodePath(overviewPolyline);
     return (
-      <Fragment>
-        <div className={styles.placesinput}>
+      <div className="add-travel-container">
+        <div className="placesinput">
           <Modal open={this.state.error !== '' && this.state.confirmModal} onClose={this.onCloseModal} center>
             <h2>Al parecer hubo un error con tu busqueda, intenta de nuevo</h2>
           </Modal>
-          <form onSubmit={this.onSubmit} className={styles.addForm} >
-            <Input
-              placeholder="Donde Empieza tu recorrido..."
-              ref={ref => (this.autocompleteFrom = ref)}
-              type="text"
-            />
-            <Input
-              placeholder="Hacia donde te diriges..."
-              ref={ref => (this.autocompleteTo = ref)}
-              type="text"
-            />
-            <div className={styles.datainfo}>
-              <div>
-                {(overviewPolyline) && <div className="distance"><p>Distancia: <br />{DistanceText}</p></div>}
-              </div>
-              <div>
-                {(overviewPolyline) && <div className="duration"><p>Duracion: <br />{DurationText}</p></div>}
-              </div>
-              <div>
-                {(overviewPolyline) && <div className="value"><p>precio estimado por pasajero: <br />$ {valueLocal || valueNational}</p></div>}
-              </div>
+          <form onSubmit={this.onSubmit} className="addForm" >
+            <img className="title-add-form" src={Title} alt="Publica tu viaje" />
+            <div className="input-container">
+              <input
+                placeholder="Donde Empieza tu recorrido..."
+                ref={ref => (this.autocompleteFrom = ref)}
+                type="text"
+              />
+              <input
+                placeholder="Hacia donde te diriges..."
+                ref={ref => (this.autocompleteTo = ref)}
+                type="text"
+              />
             </div>
-            {
-              (!this.state.showBtn) &&
-                <div className={styles.options}>
-                  <h4>Elije tus preferencias <br /> de viaje:</h4>
-                  {petChoice}
-                  {lugaggeChoice}
-                  {cigarChoice}
-                  {foodChoice}
-                </div>
-            }
-            <div className="btnroute">
-              {to && this.state.showBtn && this.state.date !== null && <button className={styles.calcularbtn} type="button" onClick={this.handleCalcular} >Calcular</button>}
-              {!this.state.showBtn && <button className={styles.cancelarbtn} type="button" onClick={this.handleCancelar} >Cancelar</button>}
-              {!this.state.showBtn && <button className={styles.continuebtn} type="button" onClick={this.handleContinuar} >Continuar</button>}
-            </div>
+              <div className="datainfo">
+                  {(overviewPolyline) && <div className="distance"><p>Distancia: <br />{DistanceText}</p></div>}
+                  {(overviewPolyline) && <div className="duration"><p>Duracion: <br />{DurationText}</p></div>}
+                  {(overviewPolyline) && <div className="value"><p>precio estimado por pasajero: <br />$ {valueLocal || valueNational}</p></div>}
+              </div>
+              {
+                (!this.state.showBtn) &&
+                  <div className="options">
+                    <h4>Elije tus preferencias <br /> de viaje:</h4>
+                    {petChoice}
+                    {lugaggeChoice}
+                    {cigarChoice}
+                    {foodChoice}
+                  </div>
+              }
+              <div className="btnroute">
+                {to && this.state.showBtn && this.state.date !== null && <Button type="primary" className="calcularbtn" htmlType="button" onClick={this.handleCalcular} >Calcular</Button>}
+                {!this.state.showBtn && <Button  type="primary"  htmlType="button" onClick={this.handleCancelar} >Cancelar</Button>}
+                {!this.state.showBtn && <Button type="primary"  htmlType="button" onClick={this.handleContinuar} >Continuar</Button>}
+              </div>
           </form>
         </div>
 
@@ -289,8 +288,9 @@ class Contents extends Component {
             {...this.props}
             containerStyle={{
               position: 'relative',
+              display: 'inline-block',
               height: '30vh',
-              width: '100%',
+              width: '80%',
             }}
             centerAroundCurrentLocation
             initialCenter={{
@@ -317,7 +317,80 @@ class Contents extends Component {
             />
           </Map>
         </div>
-      </Fragment>
+        <style scoped>{`
+          @media(max-width: 420px) {
+            .title-add-form {
+              width:  100%;
+            }
+            .datainfo,
+            .options {
+              width: 100%;
+              text-align: -webkit-center;
+              flex-wrap: wrap;
+            }
+            .btnroute {
+              flex-direction: column;
+            }
+          }
+          .distance,
+          .duration,
+          .value {
+            color: rgb(42,168,154);
+            font-weight: 800;
+            border: 3px solid #8f8f8f;
+            display: inline-block;
+            font-size: .6rem;
+            border-radius: 5px 5px 0px 5px;
+            width: 83px;
+            height: 77px;
+            margin: 7px;
+          } 
+          .datainfo {
+            display: inline-flex;
+          }
+           .input-container {
+             margin: 10px;
+           }          
+           .input-container input {
+             margin: 10px;
+           }          
+          
+          .options {
+            display: inline-flex;
+            cursor: pointer;
+          }
+          .options h4,
+          .options p {
+            color: gray;
+            width: 100px;
+          }
+          .options img{
+            width: 40px;
+          }
+          .containermap {
+            height: 200px;
+            width: 200px;
+            display: inline-block;
+          }
+          .calendar {
+            background: black;
+          }
+          .datecontainer {
+            display: inline-flex;
+            flex-direction: column;
+            text-align: center;
+            display: inline-flex;
+            color: grey;
+            width: 142px;
+            margin-bottom: 10px;
+          }
+          .btnroute {
+            display: flex;
+            justify-content: space-around;
+            margin: 5px
+          }
+        `}</style>
+      </div>
     );
   }
 }
