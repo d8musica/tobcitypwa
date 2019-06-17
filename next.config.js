@@ -3,8 +3,29 @@
 // the browser will use files previously saved locally to the user’s device instead.
 // AKA Offline Mode!
 const withOffline = require("next-offline");
+const withCSS = require('@zeit/next-css')
+const withImages = require('next-images')
+const withLess = require('@zeit/next-less')
+require("dotenv").config
+const path =require("path")
+const Dotenv = require("dotenv-webpack")
 
 const nextConfig = {
+  webpack: config => {
+    config.plugins= config.plugins || []
+    config.plugins = [
+      ...config.plugins,
+
+      new Dotenv({
+      path: path.join(__dirname, ".env"),
+        systemvars: true
+      })
+    ]
+    return config
+  },
+  lessLoaderOptions: {
+    javascriptEnabled: true
+  },
   target: "serverless",
   workboxOpts: {
     swDest: "static/service-worker.js",
@@ -26,6 +47,6 @@ const nextConfig = {
       }
     ]
   }
-};
+}
 
-module.exports = withOffline(nextConfig);
+module.exports = withCSS(withImages(withLess(withOffline(nextConfig))));

@@ -1,56 +1,92 @@
-import App, { Container } from "next/app";
-import Head from "next/head";
-import styled, { createGlobalStyle } from "styled-components";
-import Nav from "../components/Nav";
-import { title } from "./_document";
+import App, { Container } from 'next/app'
+import withReduxStore from '../lib/with-redux-store'
+import { Provider } from 'react-redux'
+import { PageTransition } from 'next-page-transitions'
+import Loader from '../components/Loader'
+import Layout from '../layouts/main'
+import '../static/css/styles.less'
 
-// Any global CSS variables and selectors we want
-const GlobalStyle = createGlobalStyle`
-  :root {
-    --padding: 2rem;
-    --max-width: 50rem;
-  }
-
-  body {
-    background: var(--background--1);
-    font-family: 'PT Sans', sans-serif;
-    margin: 0;
-  }
-`;
-
-const Main = styled.main`
-  margin: 0 auto;
-  max-width: var(--max-width);
-  padding: var(--padding);
-`;
-
-export default class MyApp extends App {
-  static async getInitialProps({ Component, ctx }) {
-    let pageProps = {};
-
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
+const TIMEOUT = 400
+class MyApp extends App {
+  static async getInitialProps({ Component, ctx}) {
+    let pageProps = {}
+    if(Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx)
     }
-
-    return { pageProps };
+    if(ctx.req && ctx.req.session.passport) {
+      pageProps.user = ctx.req.session.passport.user
+    }
+    return {pageProps}
   }
-
-  render() {
-    const { Component, pageProps, router } = this.props;
-
+  state = {
+    user: this.props.pageProps.user
+  }
+  render () {
+    const { Component, pageProps, reduxStore } = this.props
+    const props = {
+      ...pageProps,
+      user: this.state.user
+    }
     return (
-      <>
-        <Head>
-          <title>{title}</title>
-        </Head>
-        <Container>
-          <Nav />
-          <Main>
-            <Component {...pageProps} router={router} />
-          </Main>
-          <GlobalStyle />
-        </Container>
-      </>
-    );
+      <Container>
+        <Provider store={reduxStore}>
+          <Layout user={this.state.user}>
+            <PageTransition
+              timeout={TIMEOUT}
+              classNames='page-transition'
+              loadingComponent={<Loader />}
+              loadingDelay={500}
+              loadingTimeout={{
+                enter: TIMEOUT,
+                exit: 0
+              }}
+              loadingClassNames='loading-indicator'
+            >
+              <Component {...props} key={Component}/>
+            </PageTransition>
+          </Layout>
+        </Provider>
+        <style jsx global>{`
+          .ant-btn-primary {
+            background: rgb(42,168,154);
+            border: none;
+            color: white;
+          }
+          .ant-btn-primary:focus,
+          .ant-btn-primary:active,
+          .ant-btn-primary:hover {
+            background-color: rgba(255, 200, 58, 1);
+            color: rgb(42,168,154);
+          }
+          .page-transition-enter {
+            opacity: 0;
+            transform: translate3d(0, 20px, 0);
+          }
+          .page-transition-enter-active {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+            transition: opacity ${TIMEOUT}ms, transform ${TIMEOUT}ms;
+          }
+          .page-transition-exit {
+            opacity: 1;
+          }
+          .page-transition-exit-active {
+            opacity: 0;
+            transition: opacity ${TIMEOUT}ms;
+          }
+          .loading-indicator-appear,
+          .loading-indicator-enter {
+            opacity: 0;
+          }
+          .loading-indicator-appear-active,
+          .loading-indicator-enter-active {
+            opacity: 1;
+            transition: opacity ${TIMEOUT}ms;
+          }
+        `}</style>
+      </Container>
+    )
   }
 }
+
+export default withReduxStore(MyApp)
