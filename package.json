@@ -5,9 +5,9 @@
   "main": "server/index.js",
   "scripts": {
     "build": "next build",
-    "deploy": "now && now alias",
     "dev": "nodemon server/server.js",
-    "start": "NODE__ENV=production node server/server.js"
+    "start": "NODE__ENV=production node server/server.js -p $PORT",
+    "heroku-postbuild": "npm run build"
   },
   "repository": {
     "type": "git",
