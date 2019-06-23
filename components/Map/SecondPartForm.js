@@ -1,19 +1,79 @@
-import { Form, DatePicker, Input, Select, Avatar, Button, InputNumber , message} from 'antd'
+import { Form, DatePicker, Input, Select, Avatar, Button, InputNumber , message, Icon, Card } from 'antd'
 import { connect } from 'react-redux'
 import Router from 'next/router'
+import MapSolo from './MapSolo'
 import LocalAvatar from '../../static/addTravel/local.png'
 import NacionalAvatar from '../../static/addTravel/nacional.png'
 import ConveniosAvatar from '../../static/addTravel/convenios.png'
 import { addTravelRequest } from '../../redux/actions/travelAction'
-const { Option } = Select;
-const { TextArea } = Input
+import Mascotas from './images/mascota.png'
+import NoMascotas from './images/nomascota.png'
+import Equipaje from './images/equipaje.png'
+import NoEquipaje from './images/noequipaje.png'
+import Cigarrillo from './images/cigarro.png'
+import NoCigarro from './images/nocigarro.png'
+import Comida from './images/comida.png'
+import NoComida from './images/nocomida.png'
 
+const { Option } = Select
+const { TextArea } = Input
+const { Meta } = Card
+
+const TravelDetails = ({ info, ...props }) => {
+  const petChoice = (info.pets) ?
+    <img key='Mascotas' alt="Opciones de viaje" src={Mascotas} />
+    :
+    <img key='NoMascotas' alt="Opciones de viaje" src={NoMascotas} />
+  const lugaggeChoice = (info.lugagge) ?
+    <img  alt="Opciones de viaje" src={Equipaje} />
+    :
+    <img key='NoEquipaje' alt="Opciones de viaje" src={NoEquipaje} />
+  const cigarChoice = (info.smoke) ?
+    <img key='Cigarrillo' alt="Opciones de viaje" src={Cigarrillo} />
+    :
+    <img alt="Opciones de viaje" src={NoCigarro} />
+  const foodChoice = (info.food) ?
+    <img key='Comida' alt="Opciones de viaje" src={Comida} />
+    :
+    <img key='NoComida'  alt="Opciones de viaje" src={NoComida} />
+  return (
+    <>
+    <Card
+      style={{ width: 300, display: 'inline-block' }}
+      cover={
+        <div className="map-container">
+          <MapSolo props={info} />
+        </div>
+      }
+      actions={[<Icon onClick={() => props.handler()} type="edit" />]}
+    >
+      <Meta
+        avatar={[petChoice, lugaggeChoice, cigarChoice, foodChoice]}
+        title={<p>Desde:{info.nameFrom}</p>}
+        description={<p>Hacia:{info.nameTo}</p>}
+      />
+    </Card>
+    <style scoped>{`
+      .map-container {
+        position: relative;
+        width: 300px;
+        height: 130px;
+      }
+      .ant-card-meta-avatar img {
+        width: 20%;
+      }
+      .ant-card-meta-avatar {
+        float: none;
+      }
+    `}</style>
+    </>
+  )
+}
 
 function SecondPartForm(props) {
-  console.log('props: ', props);
-  const { dispatch, session, nameTo } = props
+  const { dispatch, user, nameTo } = props
   const { getFieldDecorator } = props.form
-  const userId = session.user.id
+  const userId = user.id
   const config = {
     rules: [{ type: 'object', required: true, message: 'Selecciona la hora de tu viaje' }],
   }
@@ -28,22 +88,20 @@ function SecondPartForm(props) {
     },
   };
   function handleSubmit (e) {
-    e.preventDefault();
+    e.preventDefault()
     props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch(addTravelRequest(values, userId))
         message
           .loading('Tu viaje esta siendo publicado..', 1.5)
           .then(() => message.success(`El viaje hacia ${nameTo} fue publicado con exito!`, 2.5))
-        Router.push('/auth')
+        Router.push('/profile')
       }
     })
   }
-  function handleChange(value) {
-    console.log(`selected ${value}`);
-  }
   return (
     <div className="second-part-container">
+      <TravelDetails {...props} />
       <Form 
         {...formItemLayout}
         onSubmit={handleSubmit}>
@@ -58,8 +116,8 @@ function SecondPartForm(props) {
               {
                 required: true,
                 message: 'Por favor ingresa la placa de tu vehiculo',
-              },
-            ],
+              }
+            ]
           })(<Input placeholder="Ingresa la placa de tu vehiculo" />)}
         </Form.Item>
         <Form.Item label="Cuanto sera el valor por persona">
@@ -85,11 +143,11 @@ function SecondPartForm(props) {
             rules: [
               {
                 required: true,
-                message: 'Elige el tipo de viaje',
+                message: 'Elige el tipo de viaje'
               },
             ] 
           })(
-            <Select onChange={handleChange}>
+            <Select>
               <Option value="local"><Avatar src={LocalAvatar}/>Local</Option>
               <Option value="nacional"><Avatar src={NacionalAvatar}/>Nacional</Option>
               <Option value="convenios" ><Avatar src={ConveniosAvatar}/> Convenios</Option>
@@ -106,7 +164,7 @@ function SecondPartForm(props) {
               },
             ]  
           })(
-            <Select onChange={handleChange}>
+            <Select>
               <Option value="1">1</Option>
               <Option value="2">2</Option>
               <Option value="3" >3</Option>
@@ -119,6 +177,14 @@ function SecondPartForm(props) {
         </Button>
       </Form>
       <style scoped>{`
+        .ant-form {
+          background: rgba(255, 255, 255, .8);
+          padding: 28px;
+          margin-top: 20px;
+        }
+        .ant-row {
+          margin-bottom: 0px;
+        }
         .second-part-container {
           position: relative;
           top: 20%;
@@ -133,7 +199,7 @@ const SecondPartFormEnhanced = Form.create({ name: 'second-part-form' })(SecondP
 function mapStateToProps(state) {
   return {
     nameTo: state.travelsReducer.info.nameTo,
-    state
+    info: state.travelsReducer.info
   }
 } 
 

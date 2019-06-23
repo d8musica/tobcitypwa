@@ -1,18 +1,19 @@
 import axios from 'axios'
-import getConfig from 'next/config'
+
 const server = process.env.SERVER
 export function addPlacesRequest(places) {
   return dispatch =>  dispatch({ type: 'SAVE_HALF_TRAVEL', places})
 }
 
 export function addTravelRequest(travelData, userId) {
+  console.log('userId: ', userId);
   return (dispatch, getState) => {
     const travelData1 = getState().travelsReducer.info
     return axios.post(server + "/api/travels", {
       travel: {
         plate: travelData.plate,
         price: travelData.price,
-        content: travelData.content,
+        content: travelData.comments,
         traveltype: travelData.traveltype,
         sits: travelData.sits,
         date: travelData.date,
@@ -28,13 +29,13 @@ export function addTravelRequest(travelData, userId) {
         pets: travelData1.pets,
         lugagge: travelData1.lugagge,
         smoke: travelData1.smoke,
-        food: travelData1.food,
+        food: travelData1.food
       },
       userId
     })
       .then((res) => dispatch({
         type: 'ADD_TRAVEL',
-        travel: res.data.travel,
+        travel: res.data.travel
       }))
   }
 }
@@ -44,18 +45,41 @@ export function fetchTravels() {
     return axios(server + "/api/travels").then(res => {
       dispatch({
         type: 'ADD_TRAVELS',
-        travels: res.data.travels,
-      });
-    });
-  };
+        travels: res.data.travels
+      })
+    })
+  }
 }
-export function fetchUsersWithTravels() {
+
+export function addPassengerToTravel(travelId) {
   return (dispatch) => {
-    return axios(server + "/api/users").then(res => {
-      dispatch({
-        type: 'ADD_USERS_WITH_TRAVELS',
-        travels: res.data.users,
-      });
-    });
-  };
+    return axios.post(server + "/api/add_passenger_to_travel", {travelId}).then(res => {
+      if(res.data.noCellError) {
+        dispatch({
+          type: 'CONFIRMATION_ERROR',
+          msg: res.data.noCellError
+        })
+      }
+      if(res.data.travel) {
+        dispatch({
+          type: 'ADD_UPDATED_TRAVEL',
+          travel: res.data.travel
+        })
+      }
+    })
+  }
+}
+export function firstVisitCheck() {
+  return () => {
+    return axios.post(server + "/api/check_user_visit")
+  }
+}
+
+export function closeModal() {
+  return dispatch => {
+    dispatch({
+      type: 'CONFIRMATION_ERROR',
+      msg: ''
+    })
+  }
 }

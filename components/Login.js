@@ -50,7 +50,7 @@ function Login(props) {
           <div className="top-container">
             <div className="emoji-container">
               <img  src={Circle} alt="circle-emojis"  className="image emojis "/>
-              <Carousel autoplay dotPosition="top" effect="fade">
+              <Carousel autoplay dotPosition="top" effect="fade" dots={false}>
                 <div>
                   <img  src={Logo} alt="Tobcity Logo"  className="carousel-img "/>
                 </div>
@@ -81,9 +81,9 @@ function Login(props) {
               </Carousel>
             </div>
             <div className="loginbtns">
-              <a href="/auth/login">
+              {/* <a href="/auth/login">
                 <img className="login-button" src={LoginCell} alt="Ingreso con celular " />
-              </a>
+              </a> */}
               <a href="/auth/facebook">
                 <img className="login-button" src={LoginFace} alt="Ingreso con Facebook" />
               </a>

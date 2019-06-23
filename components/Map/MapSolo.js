@@ -1,36 +1,28 @@
 import React, { PureComponent, Fragment } from 'react'
 import { Map, Polyline, Marker, GoogleApiWrapper } from 'google-maps-react'
 import { connect } from 'react-redux'
-import styles from './Autocomplete.css'
-import getConfig from 'next/config'
 
-const { publicRuntimeConfig } = getConfig()
-const { GOOGLE_MAPS } = publicRuntimeConfig
 class Contents extends PureComponent {
   render() {
-    const { latFrom, latTo, lngFrom, lngTo, polyline } = this.props;
-    console.log(this.props)
+    const { latFrom, latTo, lngFrom, lngTo, polyline } =  this.props.props
     const from = { lat: latFrom, lng: lngFrom }
     const to = { lat: latTo, lng: lngTo }
-    const overviewPolyline = polyline;
+    const overviewPolyline = polyline
     const pointsline = overviewPolyline && this.props.google.maps.geometry.encoding.decodePath(overviewPolyline)
     const pointstobound = [
       { lat: latFrom, lng: lngFrom },
-      { lat: latTo, lng: lngTo },
-    ];
-    const bounds = new this.props.google.maps.LatLngBounds();
+      { lat: latTo, lng: lngTo }
+    ]
+    const bounds = new this.props.google.maps.LatLngBounds()
     for (let i = 0; i < pointstobound.length; i++) {
-      bounds.extend(pointstobound[i]);
+      bounds.extend(pointstobound[i])
     }
     return (
       <Fragment>
-        <div className="right">
+        <div>
           <Map
             {...this.props}
-            containerStyle={{
-              position: 'absolute',
-              width: '100%',
-            }}
+            bounds={bounds}
             zoom={12}
           >
             {
@@ -56,19 +48,14 @@ class Contents extends PureComponent {
 }
 
 const MapWrapper = props => (
-  <Map className="map" google={props.google} visible={false}>
+  <Map google={props.google} visible={false}>
     <Contents {...props} />
   </Map>
 )
-function mapStateToProps(store) {
-  return {
-    store,
-  };
-}
 
-export default connect(mapStateToProps)(GoogleApiWrapper({
-  apiKey: GOOGLE_MAPS,
+export default connect()(GoogleApiWrapper({
+  apiKey: process.env.GOOGLE_MAPS,
   language: 'es',
   region: 'co',
-  libraries: ['geometry', 'places'],
+  libraries: ['geometry', 'places']
 })(MapWrapper))

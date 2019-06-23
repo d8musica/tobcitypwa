@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Login from '../components/Login'
 import { connect } from 'react-redux'
 import Link from 'next/link'
+import Router from 'next/router'
 import { Card, Button, Avatar, Row, Col, Modal } from 'antd'
 import ProfileCover from '../static/home/profileCover.png'
 import SearchCover from '../static/home/searchCover.png'
@@ -14,7 +15,7 @@ import SuggestTravel from '../static/home/suggestTravel.png'
 import Nacional from '../static/home/nacional.png'
 import Local from '../static/home/local.png'
 import Convenios from '../static/home/convenios.png'
-import { fetchTravels, fetchUsersWithTravels } from '../redux/actions/travelAction'
+import { fetchTravels, firstVisitCheck } from '../redux/actions/travelAction'
 
 const { Meta } = Card
 
@@ -88,7 +89,7 @@ function AgregarViaje (props) {
           src={AddTravelCover}
         />
       }
-      actions={[<Button onClick={() => props.handleAddTravelModal()} type="primary">COMPARTE TU VIAJE</Button>]}
+      actions={props.confirmed && [<Button onClick={() => props.handleAddTravelModal()} type="primary">COMPARTE TU VIAJE</Button>]}
     >
       <Meta
         avatar={<Avatar src={AddAvatar} />}
@@ -100,31 +101,38 @@ function AgregarViaje (props) {
 }
 
 function Home (props) {
-  // console.log('props: ', props);
   const [addTravelModal, setAddTravelModal] = useState(false)
   const [searchTravelModal, setSearchTravelModal] = useState(false)
-  const { displayName, picture } = props.user || ''
+  
   useEffect(() => {
     props.dispatch(fetchTravels())
-    props.dispatch(fetchUsersWithTravels())
   }, [])
-  function handleOk() {
-    console.log('hi!')
-  }
+
+
+  
   function handleAddTravelModal() {
     setAddTravelModal(!addTravelModal)
   }
+  
   function handleSearchModal() {
     setSearchTravelModal(!searchTravelModal)
   }
+  function handleOk() {
+    props.dispatch(firstVisitCheck())
+    Router.push('/profile')
+  }
   if (props.user) {
+    const { user } = props
+    const { firstTime, confirmed } = user
+    const avatarGoogle =  (user.google && user.google.avatar)
+    const avatarFace =  (user.facebook && user.facebook.avatar)
     return (
       <Row  gutter={{xs: 8, sm: 16, md: 48}} className='main-container'>
         <img className="background-home" src={HomeBG} alt="TOBCITY background home" />
         <div className="options-container-home">
-          <Col xs={24} sm={12} lg={8} ><Profile name={displayName} avatar={picture} /></Col>
+          <Col xs={24} sm={12} lg={8} ><Profile name={user.name} avatar={avatarGoogle || avatarFace } /></Col>
           <Col xs={24} sm={12} lg={8} ><BuscarViaje handleSearchModal={handleSearchModal} /></Col>
-          <Col xs={24} sm={12} lg={8} ><AgregarViaje handleAddTravelModal={handleAddTravelModal} /></Col>
+          <Col xs={24} sm={12} lg={8} ><AgregarViaje confirmed={confirmed} handleAddTravelModal={handleAddTravelModal} /></Col>
         </div>
         <ModalComponent 
           title="Agrega tu viaje o sugiere el que tienes en mente:" 
@@ -244,6 +252,19 @@ function Home (props) {
             </Col>
           </Row>     
         </ModalComponent>
+        <Modal
+          footer={[
+            null,
+            <Button key="submit" type="primary" onClick={handleOk}>
+              Empezar a viajar con TOBCITY
+            </Button>
+          ]}
+          title="Bienvenido a TOBCITY"
+          visible={firstTime}
+          onOk={handleOk}
+        >
+          <p>BIENVENIDISIMOOOO!!!</p>
+        </Modal>
         <style scoped>{`
             .ant-modal-close-icon {
               top: 5px;
@@ -289,7 +310,6 @@ function Home (props) {
     )
   }
 }
-
 
 function mapStateToProps(state) { 
   return {

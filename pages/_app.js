@@ -5,6 +5,7 @@ import { PageTransition } from 'next-page-transitions'
 import Loader from '../components/Loader'
 import Layout from '../layouts/main'
 import '../static/css/styles.less'
+import axios from 'axios'
 
 const TIMEOUT = 400
 class MyApp extends App {
@@ -14,7 +15,7 @@ class MyApp extends App {
       pageProps = await Component.getInitialProps(ctx)
     }
     if(ctx.req && ctx.req.session.passport) {
-      pageProps.user = ctx.req.session.passport.user
+      pageProps.user =  await ctx.req.user
     }
     return {pageProps}
   }
@@ -47,16 +48,28 @@ class MyApp extends App {
           </Layout>
         </Provider>
         <style jsx global>{`
+          a {
+            color: rgb(42,168,154);
+          }
+          a:hover {
+            color: rgba(255, 200, 58, 1);
+          }
+          .ant-btn {
+            color: rgb(42,168,154);
+          }
           .ant-btn-primary {
             background: rgb(42,168,154);
             border: none;
             color: white;
           }
+          .ant-btn:focus,
+          .ant-btn:active,
+          .ant-btn:hover,
           .ant-btn-primary:focus,
           .ant-btn-primary:active,
           .ant-btn-primary:hover {
             background-color: rgba(255, 200, 58, 1);
-            color: rgb(42,168,154);
+            color: black;
           }
           .page-transition-enter {
             opacity: 0;

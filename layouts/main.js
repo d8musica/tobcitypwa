@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { Layout, Row, Col } from 'antd'
-const { Content, Footer } = Layout;
+const { Content, Footer, Sider } = Layout;
 import SideMenu from '../components/SiderComponent'
 import Head from '../components/head'
 import Fburl from "../static/login/facebook.png";
@@ -10,11 +10,11 @@ import Gplusurl from "../static/login/google.png";
 export default ({ children, user }) => (
   <Fragment>
     <Head title="Tobcity PWA" />
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh' }} hasSider>
       <SideMenu user={user} />
       <Layout>
         <Content style={{ margin: '16px' }}>
-          <div style={{ minHeight: "100vh" }}>{children}</div>
+          {children}
         </Content>
         <Footer style={{ textAlign: 'center' }}>
           <div>
@@ -33,7 +33,7 @@ export default ({ children, user }) => (
     }
       .ant-layout-content {
         overflow: hidden;
-      }
+      } 
     `}</style>
   </Fragment>
 )

@@ -1,9 +1,9 @@
-import { SAVE_HALF_TRAVEL, ADD_TRAVEL, ADD_TRAVELS, ADD_USERS_WITH_TRAVELS } from '../actions'
+import { SAVE_HALF_TRAVEL, ADD_TRAVEL, ADD_TRAVELS, CONFIRMATION_ERROR, ADD_UPDATED_TRAVEL } from '../actions'
 
 const initialState = {
   info: {},
   travels: [],
-  users: []
+  msg: ''
 }
 
 const travelReducer =(state = initialState, action) => {
@@ -14,6 +14,7 @@ const travelReducer =(state = initialState, action) => {
       info: action.places
     }
   case ADD_TRAVEL:
+    // eslint-disable-next-line
     const { travel } =action
     return {
       ...state,
@@ -22,17 +23,26 @@ const travelReducer =(state = initialState, action) => {
         travel
       ]}
   case ADD_TRAVELS:
+    // eslint-disable-next-line
     const { travels } = action
     return {
       ...state,
       travels
     }
-  case ADD_USERS_WITH_TRAVELS:
-    const { users } = action
+  case CONFIRMATION_ERROR:
     return {
       ...state,
-      users
+      msg: action.msg
     }
+  case ADD_UPDATED_TRAVEL:
+    // eslint-disable-next-line
+    const newTravels = state.travels.map((travel) => {  
+      if(travel._id === action.travel._id) {
+        return action.travel
+      }
+      return travel
+    })
+    return {...state, travels: newTravels}
   default:
     return state
   }

@@ -102,7 +102,6 @@ class Contents extends Component {
     };
     this.props.handler()
     this.props.dispatch(addPlacesRequest(places))
-    console.log(this.props);
   }
   renderAutoComplete() {
     const { google, map } = this.props;
@@ -200,7 +199,7 @@ class Contents extends Component {
        :
       <div>
         <img onClick={this.handleFoodChecked} alt="Opciones de viaje" src={NoComida} />
-      </div>;
+      </div>
     const { from, to } = this.state;
     const pointstobound = [
       { lat: from ? from.lat() : 4.00, lng: from ? from.lng() : 72.00 },

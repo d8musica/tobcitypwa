@@ -1,0 +1,240 @@
+@media (min-width: 200px) {
+  .nationalsearchtop {
+    height: 290px;
+    position: relative;
+    text-align: center;
+  }
+  .logo {
+    display: none;
+  }
+  .nationalsearchtop h2{
+    width: 196px;
+    right: 60px;
+    color: #989895;
+    position: relative;
+    display: inline-block;
+  }
+
+  .circulo {
+    position: absolute;
+    top: 104px;
+    width: 261px;
+    right: 19px;
+    background-size: 100% 100%;
+  }
+
+  .avatar{
+    position: absolute;
+    width: 90px;
+    right: 35px;
+    top: 121px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-size: 100% 100%;
+    transition: all 3s;
+  }
+  .avatar:hover {
+      transform: rotate(360deg);
+  }
+  .ticket_container {
+    display: inline-block;
+    text-align: center;
+  }
+  .nationalwrap {
+    text-align: center;
+  }
+  .tickets-inside {
+    position: relative;
+    width: 328px;
+    height: 160px;
+  }
+
+  .tickets-inside h5{
+    width: 166px;
+    position: absolute;
+    left: 102px;
+    text-align: left;
+    display: inline-block;
+    top: 43px;
+    color: #8f8f8f;
+  }
+  .tickets-inside .ticket {
+    width: 100%;
+  }
+  .cities {
+    position: absolute;
+    right: 15px;
+    top: 42px;
+    color: #61605B;
+    font-weight: 700;
+    font-size: 8px;
+  }
+  .info {
+    text-align: left;
+    position: relative;
+    bottom: 59px;
+    display: inline-block;
+    color: #3b3b3b;
+  }
+  .fecha {
+    font-size: 14px;
+    color: #3b3b3b
+  }
+  .cupos {
+    font-size: 11px;
+    color: #3b3b3b;
+  }
+
+  .carcontainer {
+    position: relative;
+    right: -92px;
+    top: -37px;
+  }
+  .car {
+    position: absolute;
+    bottom: 40px;
+    width: 55px;
+    right: 17px;
+  	transform: translatex(0px);
+  	animation: float 1s ease-in-out infinite;
+  }
+  .carinfo {
+    border: 1px solid lightgray;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    background: rgba(163,157,157,.9);
+    position: absolute;
+    bottom: 27px;
+    width: 49px;
+    right: 19px;
+  	transform: translatex(0px);
+  	animation: float 1s ease-in-out infinite;
+  }
+  .car:hover {
+    transform: scale(1.1);
+  }
+  @keyframes float {
+  	0% {
+  		transform: translatex(0px);
+  	}
+  	50% {
+  		transform: translatex(5px);
+  	}
+  	100% {
+  		transform: translatex(0px);
+  	}
+  }
+  .options-container {
+    display: inline-block;
+    width: 107px;
+    position: absolute;
+    top: 44px;
+    left: 0px;
+  }
+  .optionsimg {
+    border-radius: 50%;
+    width: 30px;
+    height: 28px;
+    margin: 3px;
+  }
+
+  .price {
+    position: absolute;
+    background: #00ACA3;
+    color: white;
+    position: absolute;
+    top: 20px;
+    width: 75px;
+    right: 19px;
+    border-radius: 4px 4px 4px 0px;
+  }
+  .preferencias {
+    font-size: 10px;
+    position: absolute;
+    top: -19px;
+    left: 16px;
+    color: white;
+    font-weight: 800;
+  }
+  .search-input {
+    padding: 10px 10px;
+    height: 52px;
+    position: relative;
+  }
+
+  .search-input::before {
+    content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAQJJREFUKBWVkr2uQUEUhf3ET6GRaC5aFRoJKrf1BKpb8SwqovYGXkCj00k0QnRKEYkILYobvpUYmeMMyVnJl7P3mjN7Zu9zwiGv2qRFyMMSRrAFp6JPN8XzBj+wgDkUYAg7WINTYdwpDECxrRLJHeq2accdkgm8bzTvNAg2EDOGeUYI1KNO1gkuzTA1g8T7ojbn4ONQWPuHPWgeHmnzCqoe15tkSNPgPEAn68oVcOmA2XMtGK9FoE/VhOTTVNExqLCGZnxCv2pYauEC6lF0oQxX6IOvb7yX9NPEQafan+aPXDdQC18LsO6Tip5BBY6gIQaSbnMCFRCBZRcIvFkbsvCr4AFGOCxQy+JdGQAAAABJRU5ErkJggg==');
+    display: block;
+    position: absolute;
+    width: 15px;
+    z-index: 3;
+    height: 15px;
+    font-size: 20px;
+    top: 11px;
+    left: 16px;
+    line-height: 32px;
+    opacity: 0.6;
+  }
+
+  .search-input > input {
+    width: 100%;
+    font-size: 18px;
+    border: none;
+    line-height: 22px;
+    padding: 5px 10px 5px 25px;
+    height: 32px;
+    position: relative;
+    border-radius: 29px;
+  }
+
+  .search-input > input:focus {
+    outline: none;
+  }
+
+  .viajes-title{
+    color: #8f8f8f;
+    margin: 10px;
+  }
+}
+@media (min-width: 768px) {
+  .nationalsearchtop {
+    width: 35%;
+    position: absolute;
+    top: 44px;
+    display: inline-block;
+
+  }
+  .logo {
+    display: inline-block;
+    position: absolute;
+    width: 11%;
+    right: 5px;
+  }
+  .nationalwrap {
+    position: relative;
+    left: 349px;
+    display: inline-block;
+  }
+  .national-container {
+    height: 100vh;
+  }
+}
+@media (min-width: 1000px) {
+  .nationalwrap {
+    left: 417px;
+  }
+}
+@media (min-width: 1200px) {
+  .nationalwrap {
+    left: 500px;
+  }
+}
+@media (min-width: 1500px) {
+  .nationalwrap {
+    left: 708px;
+  }
+  .nationalsearchtop {
+    width: 436px;
+  }
+}

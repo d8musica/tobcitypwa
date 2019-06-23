@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 
 const travelSchema = new Schema({
   nameFrom: String,
@@ -17,7 +17,7 @@ const travelSchema = new Schema({
   dateUpdated: { type: 'Date' },
   author: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
   },
   passenger: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   traveltype: String,
@@ -25,7 +25,7 @@ const travelSchema = new Schema({
   lugagge: Boolean,
   smoke: Boolean,
   food: Boolean,
-  sits: { type: 'Number', default: '4' },
-});
+  sits: { type: 'Number', default: '4' }
+})
 
-module.exports = mongoose.model('Travel', travelSchema);
+module.exports = mongoose.model('Travel', travelSchema)
